@@ -1,4 +1,4 @@
-package string_overlap;
+package fm_index;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +22,54 @@ public class StringSuffix {
             r++;
         }
         return flTable;
+    }
+
+    public static String[] SAfromBWT(char[] BWT, int[] Cx){
+
+        int n = BWT.length;
+        String[] suffixArray = new String[n];
+        for(int i = 0; i < suffixArray.length; i++)
+            suffixArray[i] = "";
+
+        for(int c = 0; c < BWT.length; c++){
+            for(int r = 0; r < suffixArray.length; r++){
+                suffixArray[r] += BWT[r];
+            }
+            Arrays.sort(suffixArray);
+        }
+        return suffixArray;
+    }
+
+    private static char charOneLess(char[][] FL, char ch){
+        char[] chary = new char[FL.length];
+        int i = 0;
+        for(char[] charray : FL){
+            chary[i] = charray[1];
+            i++;
+        }
+        Arrays.sort(chary);
+
+        for(i = chary.length-1; i >= 0; i--){
+            if(chary[i] < ch)
+                return chary[i];
+        }
+        return ch;
+    }
+
+    private static int Cx(char Qi, int[] Cx){
+        switch (Qi){
+            case '$':
+                return Cx[0];
+            case 'A':
+                return Cx[1];
+            case 'C':
+                return Cx[2];
+            case 'G':
+                return Cx[3];
+            case 'T':
+                return Cx[4];
+        }
+        return -1;
     }
 
     public static ArrayList<String> BWT(String text){
@@ -56,7 +104,7 @@ public class StringSuffix {
     public static ArrayList<String> BWT(String[] text) {
 
         StringBuilder readCat = new StringBuilder();
-        Arrays.stream(text).forEach(E -> readCat.append("$" + E));
+        Arrays.stream(text).forEach(E -> readCat.append(E + '$'));
         ArrayList<String> suffixarray = new ArrayList<>();
         int m = readCat.length();
         suffixarray.add(readCat.toString());
@@ -81,20 +129,21 @@ public class StringSuffix {
         return dif;
     }
 
-    private static void lexographicBubbleSort(ArrayList<String> table){
+    public static void lexographicBubbleSort(ArrayList<String> table){
         String runner;
 
         for(int i = 1; i < table.size(); i++){
             int k = i-1;
             runner = table.get(i);
 
-            while(lexographicCompare(runner, table.get(k)) < 0 && k > 0){
+            while(k >= 0 && lexographicCompare(runner, table.get(k)) < 0){
                 table.set(k+1, table.get(k));
                 table.set(k, runner);
                 k--;
             }
         }
     }
+
     public static int[] Cx(char[][] flTable){
 
         int[] Cx = new int[5];
@@ -114,7 +163,7 @@ public class StringSuffix {
         return Cx;
     }
 
-    public static String[] randomGenome(int count){
+    public static String[] randomGenome(int count, int min, int max){
 
         Random rand = new Random(255);
         String[] genome = new String[count];
@@ -122,7 +171,7 @@ public class StringSuffix {
 
         for(int i = 0; i < count; i++){
 
-            int readLength = Math.abs(rand.nextInt() % 10) + 8;
+            int readLength = min + (max-min == 0 ? 0 : Math.abs(rand.nextInt() % (max-min)));
             read = new StringBuilder();
 
             for(int j = 0; j < readLength; j++){

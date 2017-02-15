@@ -1,8 +1,7 @@
 package lex_perm;
 
-import lex_perm.Lexographic;
-import lex_perm.Logger;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 

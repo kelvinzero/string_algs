@@ -25,7 +25,7 @@ public class StringMatching {
                 _alphabet.add(entry);
             }
         }
-        constructAutomaton();
+        constructAutomata();
         printStateTable();
 
     }
@@ -57,27 +57,23 @@ public class StringMatching {
         System.out.println();
     }
 
-    private static void constructAutomaton(){
+    private static void constructAutomata(){
 
-        int m = _P.length;
-        _Q = new Vector[m];
+        int m = _P.length; // pattern length
+        _Q = new Vector[m]; //
 
         for(int i = 0; i < m; i++){
             _Q[i] = new Vector<>();
             for(int v = 0; v < _alphabet.size(); v++)
                 _Q[i].add(new Entry(_alphabet.get(v)._letter));
         }
-
         for(int q = 0; q < m; q++){
 
             for(Entry a : _alphabet){
 
                 int k = Math.min(m+1, q+2);
-
                 char[] Aqx = new char[q+1];
-                char[] Ak;
-                char[] AqXsuffix;
-
+                char[] Ak, AqXsuffix;
                 System.arraycopy(_P, 0, Aqx, 0, q);
                 Aqx[q] = a._letter;
 
