@@ -1,6 +1,7 @@
 package parallel_processes;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -41,7 +42,7 @@ public class Point_processor {
 
         int process_num = 0;
         for(Point point : _points) {
-            _processors[process_num] = new PointProcess(process_num, point);
+            _processors[process_num] = new PointProcess(process_num, point, _points[0]);
             process_num++;
         }
         for(PointProcess pp : _processors){
@@ -54,14 +55,21 @@ public class Point_processor {
      */
     class PointProcess extends Thread{
 
-        private int pid;
+        private int _pid;
         private int _round;
-        private Point _this_point;
+        private Point _point;
+        private Point _high_point;
+        private Point _origin;
+        private boolean _is_observable = true;
+        private ArrayList _message;
 
-        PointProcess(int pnum, Point thisPoint){
-            pid = pnum;
-            _this_point = thisPoint;
-            _round = 0;
+        PointProcess(int pnum, Point thisPoint, Point origin){
+            _pid = pnum;
+            _point = thisPoint;
+            _high_point = thisPoint;
+            _origin = origin;
+            _round = 1;
+            _message = new ArrayList();
         }
 
         int getExecutionNumber(){
@@ -71,17 +79,19 @@ public class Point_processor {
         @Override
         public void run() {
 
-            int bitCount = Integer.toBinaryString(_processorCount-1).length();
-            int exchange_pid = Process_tools.flipBit(pid, _round +1, bitCount);
-            PointProcess exchange_processor = _processors[exchange_pid];
+            int             bitCount            = Integer.toBinaryString(_processorCount-1).length();
+            int             exchange_pid;
+            PointProcess    exchange_process;
 
-            while (_round < bitCount) {
+            _message.add(0);
 
-                // the lower one does nothing, only perform if higher process
-                if(exchange_pid < this.pid && exchange_processor._round == _round){
+            while (_round <= bitCount) {
 
-                }
+                exchange_pid  = Process_tools.flipBit(_pid, _round, bitCount);
+                exchange_process = _processors[exchange_pid];
+
             }
+            //System.out.println("PID: " + _pid + " Point:[" + _point.x + "," + _point.y + "]  Visible: " + _is_observable);
         }
     }
 }

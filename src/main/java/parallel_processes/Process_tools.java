@@ -21,12 +21,12 @@ class Process_tools {
                 binaryChars[charsLength-1-i] = '0';
         }
 
-        if(binaryChars[binaryChars.length-bitAt] == '1')
-            binaryChars[binaryChars.length-bitAt] = '0';
-        else
-            binaryChars[binaryChars.length-bitAt] = '1';
+            if (binaryChars[binaryChars.length - bitAt] == '1')
+                binaryChars[binaryChars.length - bitAt] = '0';
+            else
+                binaryChars[binaryChars.length - bitAt] = '1';
 
-        return Integer.parseInt(new String(binaryChars));
+        return Integer.parseInt(new String(binaryChars), 2);
     }
 
     static double vectorDirection(Point start, Point mid, Point end){
